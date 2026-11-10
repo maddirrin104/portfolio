@@ -1,16 +1,12 @@
 # Agent Instructions
 
-## Git publication scope — 2026-11-10
-
-Chủ sở hữu đã yêu cầu git init, cập nhật ignore và push source lên `maddirrin104/portfolio`. Đây là quyền commit/push cho lần thiết lập này; không phải quyền deploy. `docs/`, `public/`, cấu hình agent/skills local và artifact QA được giữ ngoài tracking để bảo vệ hồ sơ nội bộ. Trong workspace gốc, tiếp tục đọc context như bên dưới. Trong clone mới thiếu docs, đọc README và source hiện có; không tự dựng lại FACTS hoặc đoán claim. Thay đổi factual copy cần nguồn được chủ sở hữu cho phép công khai.
-
 ## Phạm vi hiện tại
 
-Personal Cybersecurity Portfolio của Võ Minh An. Foundation + Homepage MVP đã được triển khai theo TASK 01. Chỉ mở rộng tính năng theo yêu cầu phát triển tiếp theo; không tự cài skill/MCP, thêm backend hoặc deploy. Commit/push lần thiết lập Git được chủ sở hữu cho phép như ghi ở trên.
+Personal Cybersecurity Portfolio của Vo Minh An. Giai đoạn hiện tại chỉ tạo context, instructions và kế hoạch. Chỉ bắt đầu code khi có yêu cầu phát triển tiếp theo. Không tự cài package/skill/MCP, chạy script skill bên thứ ba, thêm backend, deploy, commit hoặc push trong đợt context này.
 
 ## Bắt đầu và chọn context
 
-Đầu phiên đọc [HANDOFF](docs/HANDOFF.md), chọn task trong [TASKS](docs/TASKS.md) khi có context local; chỉ đọc mục liên quan. Kiểm tra thư mục làm việc và Git status. Workspace đã được khởi tạo Git trên nhánh main; chỉ báo working tree clean khi đã kiểm tra, không tính file bị ignore là đã được lưu trên remote.
+Đầu phiên đọc [HANDOFF](docs/HANDOFF.md), chọn task trong [TASKS](docs/TASKS.md); chỉ đọc mục liên quan. Kiểm tra thư mục làm việc và Git status nếu có Git repository. Hiện workspace chưa được khởi tạo Git; không gọi trạng thái này là “clean”.
 
 | Tác vụ | Nguồn cần đọc thêm |
 |---|---|

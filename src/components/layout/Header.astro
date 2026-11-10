@@ -10,7 +10,15 @@ const base = import.meta.env.BASE_URL;
   </a>
   <nav aria-label="Main navigation">
     <ul class="nav-list">
-      {navigation.map(({ label, id }) => <li><a href={`${base}#${id}`}>{label}</a></li>)}
+      {navigation.map(({ label, href }) => <li><a href={`${base}${href}`} aria-current={href === 'about/' && Astro.url.pathname === `${base}about/` ? 'page' : undefined}>{label}</a></li>)}
     </ul>
   </nav>
+  <div class="theme-control">
+    <label for="theme-select">Theme</label>
+    <select id="theme-select" name="theme" aria-label="Color theme">
+      <option value="system">System</option>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
+  </div>
 </header>

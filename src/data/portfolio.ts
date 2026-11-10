@@ -34,16 +34,16 @@ export const profile = {
 } as const;
 
 export const navigation = [
-  { label: 'Projects', id: 'projects' },
-  { label: 'About', id: 'about' },
-  { label: 'Contact', id: 'contact' },
+  { label: 'Projects', href: '#projects' },
+  { label: 'About', href: 'about/' },
+  { label: 'Contact', href: '#contact' },
 ] as const;
 
 export const projects: readonly Project[] = [
   {
     slug: 'soc-homelab',
-    title: 'SOC Monitoring & Detection Homelab',
-    category: 'Detection & investigation',
+    title: 'SOC Homelab',
+    category: 'Security monitoring & detection engineering',
     status: 'Personal lab',
     summary: 'A home lab for following security events from their source into Splunk, then exploring detection logic and incident investigation.',
     contribution: 'My work centers on a segmented lab and collecting Windows, Linux, firewall, and IDS telemetry in Splunk.',

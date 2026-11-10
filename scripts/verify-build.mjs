@@ -13,9 +13,9 @@ async function walk(directory) {
 const files = await walk(root);
 const names = files.map(file => decodeURIComponent(file.pathname.slice(root.pathname.length)));
 for (const name of names) {
-  assert(/^(index\.html|404\.html|favicon\.svg|robots\.txt|font-license\.txt|_astro\/[\w.-]+\.(css|woff2))$/.test(name), `Unreviewed build asset: ${name}`);
+  assert(/^(index\.html|404\.html|about\/index\.html|favicon\.svg|robots\.txt|font-license\.txt|images\/ccdl1-(badge|certificate)\.webp|projects\/(soc-homelab|egis)\/index\.html|_astro\/[\w.-]+\.(css|woff2))$/.test(name), `Unreviewed build asset: ${name}`);
 }
-for (const required of ['index.html', '404.html', 'favicon.svg', 'robots.txt']) {
+for (const required of ['index.html', '404.html', 'about/index.html', 'favicon.svg', 'robots.txt', 'images/ccdl1-badge.webp', 'images/ccdl1-certificate.webp', 'projects/soc-homelab/index.html', 'projects/egis/index.html']) {
   assert(names.includes(required), `Missing output: ${required}`);
 }
 
@@ -29,8 +29,19 @@ for (const id of ['main', 'projects', 'about', 'contact']) {
 const allowedHosts = new Set(['github.com', 'linkedin.com']);
 for (const file of files.filter(file => file.pathname.endsWith('.html'))) {
   const html = await readFile(file, 'utf8');
-  assert(!/<script\b/i.test(html), 'MVP should work without client JavaScript');
-  assert(!/mailto:|tel:|cv\.pdf|ccdl1-badge|Snort 3 Inline|12 SPL|80 incidents|PRIVATE|CV_CLAIMED/i.test(html), 'Deferred or private content in HTML');
+  const inlineScripts = [...html.matchAll(/<script\b[^>]*>(.*?)<\/script>/gs)];
+  assert.equal(inlineScripts.filter(([tag]) => tag.includes('data-theme-bootstrap')).length, 1, 'Early theme bootstrap missing or duplicated');
+  assert(inlineScripts.some(([tag]) => tag.includes('data-theme-bootstrap') && tag.includes('localStorage') && tag.includes('matchMedia')), 'Theme persistence or system mode missing');
+  assert(html.indexOf('data-theme-bootstrap') < html.indexOf('rel="stylesheet"'), 'Theme bootstrap must precede the stylesheet');
+  if (file.pathname.endsWith('/about/index.html')) {
+    assert.equal(inlineScripts.length, 2, 'Only theme and certificate scripts are allowed on About');
+    assert(inlineScripts.some(([, body]) => body.includes('showModal()')), 'Certificate preview script missing from About');
+  } else {
+    assert.equal(inlineScripts.length, 1, 'Only the theme bootstrap is allowed outside About');
+  }
+  assert.equal((html.match(/<h1\b/g) ?? []).length, 1, `Page must have one h1: ${file.pathname}`);
+  assert(html.includes('noindex, nofollow'), 'Local review build must remain noindex');
+  assert(!/mailto:|tel:|cv\.pdf|ccdl1-badge\.png|Snort 3 Inline|12 SPL|80 incidents|PRIVATE|CV_CLAIMED/i.test(html), 'Deferred or private content in HTML');
   assert(!/\b(?:\d{1,3}\.){3}\d{1,3}\b/.test(html), 'IP address in output');
   for (const [, href] of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
     if (href.startsWith('https://')) {
@@ -46,4 +57,4 @@ for (const file of files.filter(file => file.pathname.endsWith('.html'))) {
   }
 }
 const size = (await Promise.all(files.map(async file => (await stat(file)).size))).reduce((sum, value) => sum + value, 0);
-console.log(`PASS: ${names.length} allowlisted files, local links/anchors, English metadata, private-content exclusions, no client JS. Total ${size} bytes.`);
+console.log(`PASS: ${names.length} allowlisted files, local links/anchors, English metadata, early theme bootstrap and certificate preview script. Total ${size} bytes.`);

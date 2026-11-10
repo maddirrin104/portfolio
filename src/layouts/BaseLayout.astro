@@ -12,7 +12,45 @@ const { title = site.title, description = site.description } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="author" content={profile.name} />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141e28" media="(prefers-color-scheme: dark)" />
+    <script is:inline data-theme-bootstrap>
+      (() => {
+        const root = document.documentElement;
+        const key = 'portfolio-theme';
+        const system = window.matchMedia('(prefers-color-scheme: dark)');
+        let preference = 'system';
+        try {
+          const saved = window.localStorage.getItem(key);
+          if (saved === 'light' || saved === 'dark' || saved === 'system') preference = saved;
+        } catch { /* Storage can be unavailable. */ }
+
+        const apply = () => {
+          const resolved = preference === 'system' ? (system.matches ? 'dark' : 'light') : preference;
+          root.dataset.theme = resolved;
+          root.dataset.themePreference = preference;
+          document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
+            meta.setAttribute('content', resolved === 'dark' ? '#141e28' : '#ffffff');
+          });
+          const select = document.getElementById('theme-select');
+          if (select) select.value = preference;
+        };
+
+        apply();
+        document.addEventListener('DOMContentLoaded', apply);
+        system.addEventListener('change', () => {
+          if (preference === 'system') apply();
+        });
+        document.addEventListener('change', event => {
+          const select = event.target;
+          if (!(select instanceof HTMLSelectElement) || select.id !== 'theme-select') return;
+          if (select.value !== 'light' && select.value !== 'dark' && select.value !== 'system') return;
+          preference = select.value;
+          try { window.localStorage.setItem(key, preference); } catch { /* Keep the current-page choice. */ }
+          apply();
+        });
+      })();
+    </script>
     <meta name="robots" content={site.indexable ? 'index, follow' : 'noindex, nofollow'} />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />

@@ -1,0 +1,114 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { profile } from '../data/portfolio';
+import { professionalProfile } from '../data/professional-profile';
+import { formatFullDate, formatMonthYear } from '../lib/format-date';
+
+const base = import.meta.env.BASE_URL;
+const { experience, education, certifications, skillGroups } = professionalProfile;
+---
+<BaseLayout title={`About | ${profile.name}`} description="The experience, education, certification and technical work behind Vo Minh An's path toward security operations.">
+  <Header />
+  <main id="main" tabindex="-1">
+    <div class="profile-page page-width">
+      <header class="profile-hero">
+        <div>
+          <h1>Behind the work.</h1>
+          <p class="profile-intro">{professionalProfile.introduction}</p>
+        </div>
+        <nav class="profile-jump" aria-label="On this page">
+          <span>On this page</span>
+          <ul>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#certifications">Certification</a></li>
+            <li><a href="#skills">Technical skills</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <section id="experience" class="profile-section" aria-labelledby="experience-heading">
+        <div class="profile-section-heading"><h2 id="experience-heading">Work experience</h2><p>Infrastructure work, described at its actual scope.</p></div>
+        {experience.map(item => <article id={item.id} class="profile-entry" aria-labelledby={`${item.id}-heading`}>
+          <div class="profile-entry-meta">
+            <p><time datetime={item.start}>{formatMonthYear(item.start)}</time> – <time datetime={item.end}>{formatMonthYear(item.end)}</time></p>
+            <p>{item.employmentType}</p>
+          </div>
+          <div class="profile-entry-content">
+            <h3 id={`${item.id}-heading`}>{item.position} <span>at <span translate="no">{item.company}</span></span></h3>
+            <p>{item.summary}</p>
+            <ul class="profile-bullets">{item.responsibilities.map(responsibility => <li>{responsibility}</li>)}</ul>
+            <p class="profile-tools">Tools and systems: {item.tools.join(' · ')}</p>
+          </div>
+        </article>)}
+      </section>
+
+      <section id="education" class="profile-section" aria-labelledby="education-heading">
+        <div class="profile-section-heading"><h2 id="education-heading">Education</h2><p>The foundation I am still building.</p></div>
+        <div class="profile-entry">
+          <div class="profile-entry-meta"><p>{education.status}</p><p>Expected <time datetime={education.expectedGraduation}>{formatMonthYear(education.expectedGraduation)}</time></p></div>
+          <div class="profile-entry-content"><h3>{education.program}</h3><p>{education.institution}</p><p class="profile-entry-note">Degree in progress; the graduation date is an expectation.</p></div>
+        </div>
+      </section>
+
+      <section id="certifications" class="profile-section" aria-labelledby="certifications-heading">
+        <div class="profile-section-heading"><h2 id="certifications-heading">Certification</h2><p>Credential details shown from the supplied certificate.</p></div>
+        {certifications.map(item => <div class="certification-feature">
+          <div class="certification-summary">
+            <img class="certification-image" src={`${base}images/ccdl1-badge.webp`} width="560" height="560" loading="lazy" decoding="async" alt="CyberDefenders CCDL1 Level 1 badge earned by Vo Minh An" />
+            <div class="certification-details">
+              <h3>{item.name}</h3>
+              <p>{item.issuer}</p>
+              <p>Earned <time datetime={item.issued}>{formatFullDate(item.issued)}</time></p>
+            </div>
+          </div>
+          <figure class="certificate-preview">
+            <button type="button" class="certificate-open" data-certificate-open aria-haspopup="dialog" aria-controls="ccdl1-certificate-dialog" aria-label="View full CCDL1 certificate">
+              <img src={`${base}images/ccdl1-certificate.webp`} width="6600" height="5100" loading="lazy" decoding="async" alt="Full CyberDefenders CCDL1 certificate issued to Vo Minh An on 4 October 2026" />
+            </button>
+            <figcaption>Full certificate · Select to enlarge</figcaption>
+          </figure>
+        </div>)}
+        <dialog id="ccdl1-certificate-dialog" class="certificate-dialog" aria-labelledby="certificate-dialog-title">
+          <div class="certificate-dialog-content">
+            <div class="certificate-dialog-header">
+              <h3 id="certificate-dialog-title">CCDL1 certificate</h3>
+              <button type="button" class="certificate-close" data-certificate-close autofocus>Close <span aria-hidden="true">×</span></button>
+            </div>
+            <img src={`${base}images/ccdl1-certificate.webp`} width="6600" height="5100" alt="Full CyberDefenders CCDL1 certificate issued to Vo Minh An on 4 October 2026" />
+            <a class="certificate-full-link" href={`${base}images/ccdl1-certificate.webp`} target="_blank" rel="noopener">Open full-resolution image <span aria-hidden="true">↗</span></a>
+          </div>
+        </dialog>
+      </section>
+
+      <section id="skills" class="profile-section profile-skills" aria-labelledby="skills-heading">
+        <div class="profile-section-heading"><h2 id="skills-heading">Technical skills</h2></div>
+        <div class="skill-rows">{skillGroups.map(group => <div class="skill-row">
+          <h3>{group.title}</h3>
+          <p>{group.skills.join(' · ')}</p>
+          <div>{group.context && <a href={`${base}${group.context.href}`}>In practice: {group.context.label} <span aria-hidden="true">↗</span></a>}</div>
+        </div>)}</div>
+        
+      </section>
+
+      <div class="profile-end"><p>For the technical detail behind the work, read the case studies.</p><a class="text-link" href={`${base}#projects`}>Explore projects <span aria-hidden="true">→</span></a></div>
+    </div>
+  </main>
+  <Footer />
+  <script>
+    const trigger = document.querySelector<HTMLButtonElement>('[data-certificate-open]');
+    const dialog = document.querySelector<HTMLDialogElement>('#ccdl1-certificate-dialog');
+    const closeButton = dialog?.querySelector<HTMLButtonElement>('[data-certificate-close]');
+
+    if (trigger && dialog && closeButton) {
+      trigger.addEventListener('click', () => dialog.showModal());
+      closeButton.addEventListener('click', () => dialog.close());
+      dialog.addEventListener('click', event => {
+        if (event.target === dialog) dialog.close();
+      });
+      dialog.addEventListener('close', () => trigger.focus());
+    }
+  </script>
+</BaseLayout>

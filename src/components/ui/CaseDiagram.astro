@@ -1,0 +1,27 @@
+---
+interface Props { kind: 'soc' | 'egis'; }
+const { kind } = Astro.props;
+const socSteps = [
+  { label: 'Sources', detail: 'Windows, Linux, firewall and network IDS telemetry' },
+  { label: 'Collection', detail: 'Forwarding and parsing into Splunk' },
+  { label: 'Analysis', detail: 'SPL searches and incident investigation' },
+];
+const egisSteps = [
+  { label: 'Incident bundle', detail: 'Scoped evidence and provenance' },
+  { label: 'Retrieval', detail: 'Evidence selection for a claim' },
+  { label: 'Draft & verify', detail: 'Atomic claims checked against evidence' },
+  { label: 'Analyst review', detail: 'Human decision on the final summary' },
+];
+const steps = kind === 'soc' ? socSteps : egisSteps;
+---
+<figure class="case-diagram" aria-labelledby="diagram-caption">
+  <ol class="case-diagram-steps">
+    {steps.map((step, index) => <li>
+      <span class="diagram-index">{String(index + 1).padStart(2, '0')}</span>
+      <div><strong>{step.label}</strong><span>{step.detail}</span></div>
+    </li>)}
+  </ol>
+  <figcaption id="diagram-caption">{kind === 'soc'
+    ? 'Logical view redrawn from the public lab documentation. It does not show network placement or prove detection results.'
+    : 'Proposed workflow from the approved Week 1 design. It does not represent a completed end-to-end system.'}</figcaption>
+</figure>

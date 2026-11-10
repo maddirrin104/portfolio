@@ -1,0 +1,53 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+import CaseDiagram from '../../components/ui/CaseDiagram.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('projects', ({ data }) => data.visibility === 'preview');
+  return entries.map(entry => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+interface Props { entry: CollectionEntry<'projects'>; }
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const project = entry.data;
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title={`${project.title} | Vo Minh An`} description={project.description}>
+  <Header />
+  <main id="main" tabindex="-1">
+    <article class="case-study">
+      <header class="case-hero page-width">
+        <a class="case-back" href={`${base}#projects`}>&larr; All projects</a>
+        <h1>{project.title}</h1>
+        <p class="case-subtitle">{project.subtitle}</p>
+        <p class="case-deck">{project.description}</p>
+      </header>
+      <div class="case-overview page-width">
+        <dl>
+          <div><dt>Project status</dt><dd>{project.status}</dd></div>
+          <div><dt>My role</dt><dd>{project.role}</dd></div>
+          <div><dt>Tools / methods</dt><dd>{project.technologies.join(' · ')}</dd></div>
+        </dl>
+        <a href={project.repository} target="_blank" rel="noopener noreferrer">View source repository <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="case-body page-width">
+        <div class="case-article">
+          <div class="case-diagram-placement"><CaseDiagram kind={project.diagram} /></div>
+          <Content />
+        </div>
+        <aside class="case-aside" aria-label="Reading note">
+          <span>Reading note</span>
+          <p>{project.diagram === 'soc'
+            ? 'Queries are documented in the source repository. Public validation records are still needed before treating them as measured detection results.'
+            : 'The research protocol and architecture describe intended experiments. They are not evaluation outcomes.'}</p>
+          <a href={`${base}#projects`}>Back to projects &rarr;</a>
+        </aside>
+      </div>
+    </article>
+  </main>
+  <Footer />
+</BaseLayout>

@@ -3,6 +3,9 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   output: 'static',
+  markdown: {
+    shikiConfig: { themes: { light: 'github-light-high-contrast', dark: 'github-dark' } },
+  },
   // The original public/ contains evidence under privacy review. Never serve it.
   publicDir: './static',
   devToolbar: { enabled: false },

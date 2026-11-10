@@ -17,6 +17,9 @@ const { project, featured = false } = Astro.props;
     <p class="project-summary">{project.summary}</p>
     <p>{project.contribution}</p>
     <p class="project-limit">{project.focus}</p>
-    <a class="text-link project-link" href={project.repository} aria-label={`Explore ${project.title} on GitHub`}>Explore repository <Arrow /></a>
+    <div class="project-actions">
+      <a class="text-link project-link" href={`${import.meta.env.BASE_URL}projects/${project.slug}/`} aria-label={`Read ${project.title} case study`}>Read case study <Arrow /></a>
+      <a class="text-link project-link project-repo-link" target="_blank" rel="noopener noreferrer" href={project.repository} aria-label={`Explore ${project.title} on GitHub`}>Source repository <Arrow /></a>
+    </div>
   </div>
 </article>

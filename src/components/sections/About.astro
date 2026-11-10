@@ -1,9 +1,10 @@
 ---
 import { profile } from '../../data/portfolio';
+const base = import.meta.env.BASE_URL;
 ---
 <section id="about" class="about-section section-space" aria-labelledby="about-heading">
   <div class="page-width about-grid">
     <div><h2 id="about-heading">Behind the work.</h2><p class="about-aside">Information Security<br />University of Information Technology,<br />VNU-HCM</p></div>
-    <div class="about-copy"><p class="about-lead">{profile.about}</p><p>{profile.approach}</p><p class="about-direction">My direction <span>{profile.focus}</span></p></div>
+    <div class="about-copy"><p class="about-lead">{profile.about}</p><p>{profile.approach}</p><p class="about-direction">My direction <span>{profile.focus}</span></p><a class="text-link about-profile-link" href={`${base}about/`}>Read my profile <span aria-hidden="true">→</span></a></div>
   </div>
 </section>
