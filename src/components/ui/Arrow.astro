@@ -1,0 +1,6 @@
+---
+interface Props { direction?: 'external' | 'right' | 'down'; }
+const { direction = 'external' } = Astro.props;
+const paths = { external: 'M5 19 19 5M5 5h14v14', right: 'M4 12h16m-7-7 7 7-7 7', down: 'M12 4v16m-7-7 7 7 7-7' };
+---
+<svg class="arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={paths[direction]} /></svg>

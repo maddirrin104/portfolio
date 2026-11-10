@@ -1,0 +1,14 @@
+---
+import { labNote } from '../../data/portfolio';
+---
+<figure class="lab-note" aria-labelledby="lab-title">
+  <div class="lab-note-heading"><h2 id="lab-title">{labNote.title}</h2><span class="lab-mark" aria-hidden="true"><span></span><span></span><span></span></span></div>
+  <div class="telemetry-flow">
+    <ul class="telemetry-sources">
+      {labNote.sources.map(source => <li><strong>{source.name}</strong><span>{source.detail}</span></li>)}
+    </ul>
+    <div class="flow-connector" aria-hidden="true"><span></span></div>
+    <div class="telemetry-destination"><span class="collector-symbol" aria-hidden="true"></span><strong>{labNote.destination}</strong><span>{labNote.destinationDetail}</span></div>
+  </div>
+  <figcaption>{labNote.caption} <a href={labNote.sourceUrl}>Source documentation</a></figcaption>
+</figure>

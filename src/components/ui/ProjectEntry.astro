@@ -1,0 +1,22 @@
+---
+import type { Project } from '../../data/portfolio';
+import Arrow from './Arrow.astro';
+interface Props { project: Project; featured?: boolean; }
+const { project, featured = false } = Astro.props;
+---
+<article class:list={['project-entry', { 'project-featured': featured }]} aria-labelledby={`${project.slug}-title`}>
+  <div class="project-title-block">
+    <h3 id={`${project.slug}-title`}>{project.title}</h3>
+    <p class="project-status"><span aria-hidden="true"></span>{project.status}</p>
+    <p class="project-category">{project.category}</p>
+    <ul class="technology-list" aria-label={`${project.title} technologies`}>
+      {project.technologies.map(technology => <li>{technology}</li>)}
+    </ul>
+  </div>
+  <div class="project-body">
+    <p class="project-summary">{project.summary}</p>
+    <p>{project.contribution}</p>
+    <p class="project-limit">{project.focus}</p>
+    <a class="text-link project-link" href={project.repository} aria-label={`Explore ${project.title} on GitHub`}>Explore repository <Arrow /></a>
+  </div>
+</article>

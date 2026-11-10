@@ -1,0 +1,44 @@
+# Dependencies and generated build/cache files
+node_modules/
+/dist/
+/.astro/
+/.cache/
+coverage/
+*.tsbuildinfo
+
+# Environment files and credentials (review example files before committing)
+.env
+.env.*
+!.env.example
+.npmrc
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Logs and generated browser/test evidence
+*.log
+/artifacts/
+/test-results/
+/playwright-report/
+/.playwright-cli/
+
+# Local agent tools, downloaded skills and machine-specific settings
+/.agents/
+/.cptr/
+/.codex/
+/.impeccable/
+/.playwright/
+/skills-lock.json
+/.vscode/
+/.idea/
+
+# Private source evidence and internal context; keep originals on this machine.
+# Astro serves reviewed assets from static/, which MUST remain tracked.
+/public/
+/docs/
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+Desktop.ini

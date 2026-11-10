@@ -1,0 +1,9 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/layout/Header.astro';
+import { profile } from '../data/portfolio';
+---
+<BaseLayout title={`Page not found — ${profile.name}`} description="This page could not be found. Return to the portfolio homepage.">
+  <Header />
+  <main id="main" class="page-width not-found" tabindex="-1"><p>404</p><h1>This page isn’t here.</h1><p>You can find my projects and contact profiles on the homepage.</p><a class="button-primary" href={import.meta.env.BASE_URL}>Return to homepage</a></main>
+</BaseLayout>

@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import Hero from '../components/sections/Hero.astro';
+import FeaturedProjects from '../components/sections/FeaturedProjects.astro';
+import About from '../components/sections/About.astro';
+---
+<BaseLayout>
+  <Header />
+  <main id="main" tabindex="-1"><Hero /><FeaturedProjects /><About /></main>
+  <Footer />
+</BaseLayout>

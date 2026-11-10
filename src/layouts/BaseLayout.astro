@@ -1,0 +1,26 @@
+---
+import latinFont from '@fontsource-variable/source-sans-3/files/source-sans-3-latin-wght-normal.woff2?url';
+import '../styles/global.css';
+import { site, profile } from '../data/portfolio';
+interface Props { title?: string; description?: string; }
+const { title = site.title, description = site.description } = Astro.props;
+---
+<!doctype html>
+<html lang={site.language}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="author" content={profile.name} />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="robots" content={site.indexable ? 'index, follow' : 'noindex, nofollow'} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="en_US" />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <link rel="preload" href={latinFont} as="font" type="font/woff2" crossorigin />
+    <title>{title}</title>
+  </head>
+  <body><slot /></body>
+</html>
