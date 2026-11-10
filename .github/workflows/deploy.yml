@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: portfolio-production
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
 
@@ -37,11 +37,25 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Type check
+        run: npm run check
+
       - name: Build Astro
         run: npm run build
 
       - name: Verify build
-        run: test -s dist/index.html
+        run: |
+          node scripts/verify-build.mjs
+          test -s dist/index.html
+
+      - name: Create artifact checksums
+        run: |
+          cd dist
+          find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+          test -s SHA256SUMS
+
+      - name: Smoke test release switching
+        run: bash tests/deploy-smoke.sh dist/
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -68,46 +82,17 @@ jobs:
     environment: production
 
     steps:
+      - name: Checkout deployment script
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: portfolio-dist
-          path: dist
+          path: ${{ runner.temp }}/portfolio-dist
 
       - name: Deploy new release
         shell: bash
-        run: |
-          set -euo pipefail
-
-          DEPLOY_ROOT="/var/www/portfolio"
-
-          RELEASE_ID="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-
-          RELEASE_DIR="${DEPLOY_ROOT}/releases/${RELEASE_ID}"
-
-          NEXT_LINK="${DEPLOY_ROOT}/.next-${RELEASE_ID}"
-
-          echo "Deploying release: ${RELEASE_ID}"
-
-          # Verify artifact
-          test -s dist/index.html
-
-          # Create release directory
-          mkdir -p "${RELEASE_DIR}"
-
-          # Copy static files
-          rsync -a \
-            --chmod=D755,F644 \
-            dist/ "${RELEASE_DIR}/"
-
-          # Verify release
-          test -s "${RELEASE_DIR}/index.html"
-
-          # Prepare new symlink
-          ln -s "${RELEASE_DIR}" "${NEXT_LINK}"
-
-          # Atomically activate release
-          mv -Tf "${NEXT_LINK}" "${DEPLOY_ROOT}/current"
-
-          echo "Deployment completed successfully"
-          echo "Active release: ${RELEASE_ID}"
+        run: bash scripts/deploy-release.sh "$RUNNER_TEMP/portfolio-dist" /var/www/portfolio "$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"

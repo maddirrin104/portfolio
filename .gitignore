@@ -34,11 +34,9 @@ coverage/
 /.idea/
 
 # Private source evidence and internal context; keep originals on this machine.
-# Astro serves reviewed assets from static/, which MUST remain tracked.
+# Astro serves reviewed assets from static/, including the owner-approved full certificate.
 /public/
 /docs/
-# Full certificate contains QR and Defender ID; keep local until publication approval.
-/static/images/ccdl1-certificate.webp
 
 # Operating-system files
 .DS_Store
