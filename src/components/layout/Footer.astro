@@ -1,13 +1,21 @@
 ---
 import { profile } from '../../data/portfolio';
 import Arrow from '../ui/Arrow.astro';
+const base = import.meta.env.BASE_URL;
 const year = new Intl.DateTimeFormat('en', { year: 'numeric', timeZone: 'Asia/Saigon' }).format(new Date());
+const socialIcons = {
+  GitHub: { src: `${base}icons/github-invertocat-white.svg`, width: 24, height: 24 },
+  LinkedIn: { src: `${base}icons/linkedin-in-white.png`, width: 26, height: 24 },
+} as const;
 ---
 <footer id="contact" class="site-footer" aria-labelledby="contact-heading">
   <div class="page-width">
     <div class="contact-grid">
       <div><h2 id="contact-heading">Let’s compare notes.</h2><p>For a conversation about security operations,<br class="desktop-break" /> my projects, or an opportunity to learn.</p></div>
-      <ul class="social-links" aria-label="Contact profiles">{profile.social.map(link => <li><a href={link.href}><span>{link.label}<small>{link.handle}</small></span><Arrow /></a></li>)}</ul>
+      <ul class="social-links" aria-label="Contact profiles">{profile.social.map(link => <li><a href={link.href} aria-label={`${link.label} profile: ${link.handle}`}>
+        <img class="social-icon" src={socialIcons[link.label].src} width={socialIcons[link.label].width} height={socialIcons[link.label].height} alt="" aria-hidden="true" decoding="async" />
+        <span class="social-copy">{link.label}<small>{link.handle}</small></span><Arrow />
+      </a></li>)}</ul>
     </div>
     <div class="footer-bottom"><p>© {year} <span translate="no">{profile.name}</span></p><a href="#main">Back to top</a></div>
   </div>

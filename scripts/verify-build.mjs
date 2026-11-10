@@ -13,9 +13,9 @@ async function walk(directory) {
 const files = await walk(root);
 const names = files.map(file => decodeURIComponent(file.pathname.slice(root.pathname.length)));
 for (const name of names) {
-  assert(/^(index\.html|404\.html|about\/index\.html|favicon\.svg|robots\.txt|font-license\.txt|images\/ccdl1-(badge|certificate)\.webp|projects\/(soc-homelab|egis)\/index\.html|_astro\/[\w.-]+\.(css|woff2))$/.test(name), `Unreviewed build asset: ${name}`);
+  assert(/^(index\.html|404\.html|about\/index\.html|favicon\.svg|robots\.txt|font-license\.txt|icons\/(github-invertocat-white\.svg|linkedin-in-white\.png)|images\/ccdl1-(badge|certificate)\.webp|projects\/(soc-homelab|egis)\/index\.html|_astro\/[\w.-]+\.(css|woff2))$/.test(name), `Unreviewed build asset: ${name}`);
 }
-for (const required of ['index.html', '404.html', 'about/index.html', 'favicon.svg', 'robots.txt', 'images/ccdl1-badge.webp', 'images/ccdl1-certificate.webp', 'projects/soc-homelab/index.html', 'projects/egis/index.html']) {
+for (const required of ['index.html', '404.html', 'about/index.html', 'favicon.svg', 'robots.txt', 'icons/github-invertocat-white.svg', 'icons/linkedin-in-white.png', 'images/ccdl1-badge.webp', 'images/ccdl1-certificate.webp', 'projects/soc-homelab/index.html', 'projects/egis/index.html']) {
   assert(names.includes(required), `Missing output: ${required}`);
 }
 

@@ -1,0 +1,113 @@
+name: Deploy Astro Portfolio
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portfolio-production
+  cancel-in-progress: true
+
+jobs:
+
+  # ===================================
+  # CI - BUILD WEBSITE
+  # ===================================
+
+  build:
+    name: Build Astro
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Astro
+        run: npm run build
+
+      - name: Verify build
+        run: test -s dist/index.html
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-dist
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
+
+  # ===================================
+  # CD - DEPLOY WEBSITE
+  # ===================================
+
+  deploy:
+    name: Deploy to Ubuntu
+    needs: build
+
+    runs-on:
+      - self-hosted
+      - linux
+      - x64
+      - portfolio-deploy
+
+    environment: production
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: portfolio-dist
+          path: dist
+
+      - name: Deploy new release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          DEPLOY_ROOT="/var/www/portfolio"
+
+          RELEASE_ID="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+
+          RELEASE_DIR="${DEPLOY_ROOT}/releases/${RELEASE_ID}"
+
+          NEXT_LINK="${DEPLOY_ROOT}/.next-${RELEASE_ID}"
+
+          echo "Deploying release: ${RELEASE_ID}"
+
+          # Verify artifact
+          test -s dist/index.html
+
+          # Create release directory
+          mkdir -p "${RELEASE_DIR}"
+
+          # Copy static files
+          rsync -a \
+            --chmod=D755,F644 \
+            dist/ "${RELEASE_DIR}/"
+
+          # Verify release
+          test -s "${RELEASE_DIR}/index.html"
+
+          # Prepare new symlink
+          ln -s "${RELEASE_DIR}" "${NEXT_LINK}"
+
+          # Atomically activate release
+          mv -Tf "${NEXT_LINK}" "${DEPLOY_ROOT}/current"
+
+          echo "Deployment completed successfully"
+          echo "Active release: ${RELEASE_ID}"

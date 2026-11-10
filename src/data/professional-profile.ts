@@ -70,7 +70,7 @@ export const professionalProfile = {
     factRefs: ['F-C01'],
   }] satisfies readonly Certification[],
   skillGroups: [
-    { title: 'Security monitoring', skills: ['Splunk', 'SPL', 'Windows Security events', 'Sysmon'], context: { label: 'SOC Homelab', href: 'projects/soc-homelab/' }, factRefs: ['F-S01', 'F-J01'] },
+    { title: 'Security monitoring', skills: ['Splunk Enterprise', 'SPL', 'Windows Security events', 'Sysmon'], context: { label: 'SOC Homelab', href: 'projects/soc-homelab/' }, factRefs: ['F-S01', 'F-J01'] },
     { title: 'Network telemetry', skills: ['OPNsense', 'Suricata'], context: { label: 'SOC Homelab', href: 'projects/soc-homelab/' }, factRefs: ['F-S01', 'F-J01'] },
     { title: 'Systems & access', skills: ['Ubuntu', 'AlmaLinux', 'SSH', 'iptables', 'WireGuard', 'TLS'], context: { label: 'vHost internship', href: 'about/#experience-vhost' }, factRefs: ['F-X02', 'F-X03'] },
     { title: 'Investigation', skills: ['PCAP analysis', 'Wireshark', 'MITRE ATT&CK'], factRefs: ['F-S01', 'F-S02'] },

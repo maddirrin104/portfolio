@@ -87,7 +87,7 @@ const { experience, education, certifications, skillGroups } = professionalProfi
         <div class="profile-section-heading"><h2 id="skills-heading">Technical skills</h2></div>
         <div class="skill-rows">{skillGroups.map(group => <div class="skill-row">
           <h3>{group.title}</h3>
-          <p>{group.skills.join(' · ')}</p>
+          <p>{group.skills.map((skill, index) => <>{index > 0 && ' · '}{skill === 'Splunk Enterprise' ? <strong>{skill}</strong> : skill}</>)}</p>
           <div>{group.context && <a href={`${base}${group.context.href}`}>In practice: {group.context.label} <span aria-hidden="true">↗</span></a>}</div>
         </div>)}</div>
         
