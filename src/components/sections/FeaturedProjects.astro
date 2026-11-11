@@ -1,8 +1,12 @@
 ---
 import { projects } from '../../data/portfolio';
 import ProjectEntry from '../ui/ProjectEntry.astro';
+import LabNote from '../ui/LabNote.astro';
 ---
 <section id="projects" class="projects page-width section-space" aria-labelledby="projects-heading">
   <div class="section-heading"><h2 id="projects-heading">Work in practice.</h2><p>Personal labs and ongoing research.<br />The context, the work, and its limits.</p></div>
-  {projects.map((project, index) => <ProjectEntry project={project} featured={index === 0} />)}
+  {projects.map((project, index) => <>
+    <ProjectEntry project={project} featured={index === 0} />
+    {index === 0 && <div class="project-lab-note"><LabNote /></div>}
+  </>)}
 </section>

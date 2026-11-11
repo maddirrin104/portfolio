@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/layout/Header.astro';
 import Footer from '../../components/layout/Footer.astro';
 import CaseDiagram from '../../components/ui/CaseDiagram.astro';
+import TechnologyLabel from '../../components/ui/TechnologyLabel.astro';
 
 export async function getStaticPaths() {
   const entries = await getCollection('projects', ({ data }) => data.visibility === 'preview');
@@ -30,7 +31,7 @@ const base = import.meta.env.BASE_URL;
         <dl>
           <div><dt>Project status</dt><dd>{project.status}</dd></div>
           <div><dt>My role</dt><dd>{project.role}</dd></div>
-          <div><dt>Tools / methods</dt><dd>{project.technologies.join(' · ')}</dd></div>
+          <div><dt>Tools / methods</dt><dd><ul class="case-technologies">{project.technologies.map(technology => <li><TechnologyLabel name={technology} /></li>)}</ul></dd></div>
         </dl>
         <a href={project.repository} target="_blank" rel="noopener noreferrer">View source repository <span aria-hidden="true">↗</span></a>
       </div>

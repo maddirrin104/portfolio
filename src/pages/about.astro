@@ -5,6 +5,7 @@ import Footer from '../components/layout/Footer.astro';
 import { profile } from '../data/portfolio';
 import { professionalProfile } from '../data/professional-profile';
 import { formatFullDate, formatMonthYear } from '../lib/format-date';
+import TechnologyLabel from '../components/ui/TechnologyLabel.astro';
 
 const base = import.meta.env.BASE_URL;
 const { experience, education, certifications, skillGroups } = professionalProfile;
@@ -30,7 +31,7 @@ const { experience, education, certifications, skillGroups } = professionalProfi
       </header>
 
       <section id="experience" class="profile-section" aria-labelledby="experience-heading">
-        <div class="profile-section-heading"><h2 id="experience-heading">Work experience</h2><p>Infrastructure work, described at its actual scope.</p></div>
+        <div class="profile-section-heading"><h2 id="experience-heading">Work experience</h2></div>
         {experience.map(item => <article id={item.id} class="profile-entry" aria-labelledby={`${item.id}-heading`}>
           <div class="profile-entry-meta">
             <p><time datetime={item.start}>{formatMonthYear(item.start)}</time> – <time datetime={item.end}>{formatMonthYear(item.end)}</time></p>
@@ -46,7 +47,7 @@ const { experience, education, certifications, skillGroups } = professionalProfi
       </section>
 
       <section id="education" class="profile-section" aria-labelledby="education-heading">
-        <div class="profile-section-heading"><h2 id="education-heading">Education</h2><p>The foundation I am still building.</p></div>
+        <div class="profile-section-heading"><h2 id="education-heading">Education</h2></div>
         <div class="profile-entry">
           <div class="profile-entry-meta"><p>{education.status}</p><p>Expected <time datetime={education.expectedGraduation}>{formatMonthYear(education.expectedGraduation)}</time></p></div>
           <div class="profile-entry-content"><h3>{education.program}</h3><p>{education.institution}</p><p class="profile-entry-note">Degree in progress; the graduation date is an expectation.</p></div>
@@ -54,7 +55,7 @@ const { experience, education, certifications, skillGroups } = professionalProfi
       </section>
 
       <section id="certifications" class="profile-section" aria-labelledby="certifications-heading">
-        <div class="profile-section-heading"><h2 id="certifications-heading">Certification</h2><p>Credential details shown from the supplied certificate.</p></div>
+        <div class="profile-section-heading"><h2 id="certifications-heading">Certification</h2></div>
         {certifications.map(item => <div class="certification-feature">
           <div class="certification-summary">
             <img class="certification-image" src={`${base}images/ccdl1-badge.webp`} width="560" height="560" loading="lazy" decoding="async" alt="CyberDefenders CCDL1 Level 1 badge earned by Vo Minh An" />
@@ -87,7 +88,7 @@ const { experience, education, certifications, skillGroups } = professionalProfi
         <div class="profile-section-heading"><h2 id="skills-heading">Technical skills</h2></div>
         <div class="skill-rows">{skillGroups.map(group => <div class="skill-row">
           <h3>{group.title}</h3>
-          <p>{group.skills.map((skill, index) => <>{index > 0 && ' · '}{skill === 'Splunk Enterprise' ? <strong>{skill}</strong> : skill}</>)}</p>
+          <ul class="skill-items">{group.skills.map(skill => <li><TechnologyLabel name={skill} /></li>)}</ul>
           <div>{group.context && <a href={`${base}${group.context.href}`}>In practice: {group.context.label} <span aria-hidden="true">↗</span></a>}</div>
         </div>)}</div>
         
