@@ -13,13 +13,19 @@ async function walk(directory) {
 const files = await walk(root);
 const names = files.map(file => decodeURIComponent(file.pathname.slice(root.pathname.length)));
 for (const name of names) {
-  assert(/^(index\.html|404\.html|about\/index\.html|favicon\.svg|robots\.txt|font-license\.txt|SHA256SUMS|icons\/(github-invertocat-white\.svg|linkedin-in-white\.png)|images\/(ccdl1-(badge|certificate)\.webp|portrait\.webp|technologies\/python\.svg)|projects\/(soc-homelab|egis)\/index\.html|_astro\/[\w.-]+\.(css|woff2))$/.test(name), `Unreviewed build asset: ${name}`);
+  assert(/^(index\.html|404\.html|about\/index\.html|favicon\.svg|robots\.txt|font-license\.txt|SHA256SUMS|icons\/(github-invertocat-white\.svg|linkedin-in-white\.png)|images\/(ccdl1-(badge|certificate)\.webp|portrait\.webp|technologies\/python\.svg)|resume\/Vo-Minh-An-Resume\.pdf|projects\/(soc-homelab|egis)\/index\.html|_astro\/[\w.-]+\.(css|woff2))$/.test(name), `Unreviewed build asset: ${name}`);
 }
-for (const required of ['index.html', '404.html', 'about/index.html', 'favicon.svg', 'robots.txt', 'icons/github-invertocat-white.svg', 'icons/linkedin-in-white.png', 'images/ccdl1-badge.webp', 'images/ccdl1-certificate.webp', 'images/portrait.webp', 'images/technologies/python.svg', 'projects/soc-homelab/index.html', 'projects/egis/index.html']) {
+for (const required of ['index.html', '404.html', 'about/index.html', 'favicon.svg', 'robots.txt', 'icons/github-invertocat-white.svg', 'icons/linkedin-in-white.png', 'images/ccdl1-badge.webp', 'images/ccdl1-certificate.webp', 'images/portrait.webp', 'images/technologies/python.svg', 'resume/Vo-Minh-An-Resume.pdf', 'projects/soc-homelab/index.html', 'projects/egis/index.html']) {
   assert(names.includes(required), `Missing output: ${required}`);
 }
 
 const homepage = await readFile(new URL('index.html', root), 'utf8');
+const resumePath = 'resume/Vo-Minh-An-Resume.pdf';
+const resumeBytes = await readFile(new URL(resumePath, root));
+assert(resumeBytes.subarray(0, 5).toString() === '%PDF-', 'Resume asset must be a PDF');
+assert(homepage.includes(`href="/${resumePath}"`) && homepage.includes('target="_blank"') && homepage.includes('rel="noopener noreferrer"'), 'View resume link missing or unsafe');
+const aboutPage = await readFile(new URL('about/index.html', root), 'utf8');
+assert(aboutPage.includes(`href="/${resumePath}"`) && aboutPage.includes('download="Vo-Minh-An-Resume.pdf"'), 'Download resume link missing or misnamed');
 assert.equal((homepage.match(/<h1\b/g) ?? []).length, 1, 'Homepage must have one h1');
 assert(homepage.includes('lang="en"'), 'Homepage language must be English');
 assert(homepage.includes('noindex, nofollow'), 'Local review build must remain noindex');
