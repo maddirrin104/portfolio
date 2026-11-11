@@ -69,17 +69,17 @@ const { experience, education, certifications, skillGroups } = professionalProfi
             <button type="button" class="certificate-open" data-certificate-open aria-haspopup="dialog" aria-controls="ccdl1-certificate-dialog" aria-label="View full CCDL1 certificate">
               <img src={`${base}images/ccdl1-certificate.webp`} width="6600" height="5100" loading="lazy" decoding="async" alt="Full CyberDefenders CCDL1 certificate issued to Vo Minh An on 4 October 2026" />
             </button>
-            <figcaption>Full certificate · Select to enlarge</figcaption>
           </figure>
         </div>)}
         <dialog id="ccdl1-certificate-dialog" class="certificate-dialog" aria-labelledby="certificate-dialog-title">
           <div class="certificate-dialog-content">
             <div class="certificate-dialog-header">
               <h3 id="certificate-dialog-title">CCDL1 certificate</h3>
-              <button type="button" class="certificate-close" data-certificate-close autofocus>Close <span aria-hidden="true">×</span></button>
+              <button type="button" class="certificate-close" data-certificate-close autofocus aria-label="Close certificate viewer">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M5 5l14 14M19 5 5 19" /></svg>
+              </button>
             </div>
             <img src={`${base}images/ccdl1-certificate.webp`} width="6600" height="5100" alt="Full CyberDefenders CCDL1 certificate issued to Vo Minh An on 4 October 2026" />
-            <a class="certificate-full-link" href={`${base}images/ccdl1-certificate.webp`} target="_blank" rel="noopener">Open full-resolution image <span aria-hidden="true">↗</span></a>
           </div>
         </dialog>
       </section>
@@ -104,12 +104,33 @@ const { experience, education, certifications, skillGroups } = professionalProfi
     const closeButton = dialog?.querySelector<HTMLButtonElement>('[data-certificate-close]');
 
     if (trigger && dialog && closeButton) {
-      trigger.addEventListener('click', () => dialog.showModal());
+      let scrollY = 0;
+      let previousBodyStyle = { position: '', top: '', width: '' };
+
+      trigger.addEventListener('click', () => {
+        scrollY = window.scrollY;
+        previousBodyStyle = {
+          position: document.body.style.position,
+          top: document.body.style.top,
+          width: document.body.style.width,
+        };
+        dialog.showModal();
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollY}px`;
+        document.body.style.width = '100%';
+        closeButton.focus();
+      });
       closeButton.addEventListener('click', () => dialog.close());
       dialog.addEventListener('click', event => {
         if (event.target === dialog) dialog.close();
       });
-      dialog.addEventListener('close', () => trigger.focus());
+      dialog.addEventListener('close', () => {
+        document.body.style.position = previousBodyStyle.position;
+        document.body.style.top = previousBodyStyle.top;
+        document.body.style.width = previousBodyStyle.width;
+        window.scrollTo(0, scrollY);
+        trigger.focus({ preventScroll: true });
+      });
     }
   </script>
 </BaseLayout>

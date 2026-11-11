@@ -19,7 +19,6 @@ export interface Project {
 
 export const profile = {
   name: 'Vo Minh An',
-  initials: 'MA',
   role: 'Aspiring SOC Analyst',
   focus: 'Blue Team & security operations',
   headline: 'Understanding incidents. Starting with evidence.',
